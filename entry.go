@@ -6,6 +6,7 @@ package changelog
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 	"sync"
@@ -200,7 +201,7 @@ func Diff(repo, ref1, ref2, dir string) (*EntryList, error) {
 	}
 	entriesAfterFI, err := wt.Filesystem.ReadDir(dir)
 	if err != nil {
-		return nil, fmt.Errorf("could not read repository directory %s: %w", dir, err)
+		return nil, fmt.Errorf("could not read repository directory %s on commit %s: %w", dir, rev2.String(), err)
 	}
 	// a set of all entries at rev2 (this release); the set of entries at ref1
 	// will then be subtracted from it to arrive at a set of 'candidate' entries.
@@ -218,7 +219,11 @@ func Diff(repo, ref1, ref2, dir string) (*EntryList, error) {
 		}
 		entriesBeforeFI, err := wt.Filesystem.ReadDir(dir)
 		if err != nil {
-			return nil, fmt.Errorf("could not read repository directory %s: %w", dir, err)
+			if os.IsNotExist(err) {
+				entriesBeforeFI = nil
+			} else {
+				return nil, fmt.Errorf("could not read repository directory %s on commit %s: %w", dir, rev1.String(), err)
+			}
 		}
 		for _, i := range entriesBeforeFI {
 			delete(entryCandidates, i.Name())
