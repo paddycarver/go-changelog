@@ -25,7 +25,7 @@ the changes that have been added between the two commits.
 To run the command line binaries, use Go to build the commands. For example:
 
 ```sh
-$ go install github.com/hashicorp/go-changelog/cmd/changelog-pr-body-check@latest
+$ go install paddy.dev/go-changelog/cmd/changelog-pr-body-check@latest
 ```
 
 ### Docker
@@ -36,7 +36,7 @@ it that specifies the environment variables and entrypoint. In the future, when
 go-changelog has config files, this will be how you can add your config files.
 
 ```Dockerfile
-FROM hashicorpdev/go-changelog
+FROM paddy/go-changelog
 
 ENV GITHUB_REPO=myrepo
 ENV GITHUB_OWNER=myorg
@@ -49,7 +49,7 @@ ENTRYPOINT ["/go-changelog/changelog-pr-body-check"]
 
 ## Usage
 
-For using the `go-changelog` library, please see [go.dev](https://pkg.go.dev/github.com/hashicorp/go-changelog).
+For using the `go-changelog` library, please see [go.dev](https://pkg.go.dev/paddy.dev/go-changelog).
 For using the specific binaries, please see the README files in their
 directories.
 

@@ -18,8 +18,8 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/github"
-	"github.com/hashicorp/go-changelog"
 	"github.com/manifoldco/promptui"
+	"paddy.dev/go-changelog"
 )
 
 //go:embed changelog-entry.tmpl

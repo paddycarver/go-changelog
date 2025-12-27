@@ -10,8 +10,8 @@ import (
 	"strconv"
 
 	"github.com/google/go-github/github"
-	"github.com/hashicorp/go-changelog"
 	"golang.org/x/oauth2"
+	"paddy.dev/go-changelog"
 )
 
 func main() {
