@@ -1,4 +1,4 @@
-module github.com/hashicorp/go-changelog
+module paddy.dev/go-changelog
 
 go 1.21
 
