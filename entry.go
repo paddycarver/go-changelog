@@ -5,9 +5,10 @@ package changelog
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"sort"
 	"sync"
 	"time"
@@ -58,7 +59,7 @@ const (
 type EntryValidationError struct {
 	message string
 	Code    EntryErrorCode
-	Details map[string]interface{}
+	Details map[string]any
 }
 
 func (e *EntryValidationError) Error() string {
@@ -87,7 +88,7 @@ func (e *Entry) Validate() *EntryValidationError {
 		return &EntryValidationError{
 			message: fmt.Sprintf("unknown changelog types %v: please use only the configured changelog entry types: %v", unknownTypes, TypeValues),
 			Code:    EntryErrorUnknownTypes,
-			Details: map[string]interface{}{
+			Details: map[string]any{
 				"unknownTypes": unknownTypes,
 			},
 		}
@@ -240,14 +241,13 @@ func Diff(repo, ref1, ref2, dir string) (*EntryList, error) {
 	entries := NewEntryList(len(entryCandidates))
 	errg := new(errgroup.Group)
 	for name := range entryCandidates {
-		name := name // https://golang.org/doc/faq#closures_and_goroutines
 		errg.Go(func() error {
 			fp := filepath.Join(dir, name)
 			f, err := wt.Filesystem.Open(fp)
 			if err != nil {
 				return fmt.Errorf("error opening file at %s: %w", name, err)
 			}
-			contents, err := ioutil.ReadAll(f)
+			contents, err := io.ReadAll(f)
 			f.Close()
 			if err != nil {
 				return fmt.Errorf("error reading file at %s: %w", name, err)
@@ -277,10 +277,5 @@ func Diff(repo, ref1, ref2, dir string) (*EntryList, error) {
 }
 
 func TypeValid(Type string) bool {
-	for _, a := range TypeValues {
-		if a == Type {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(TypeValues, Type)
 }

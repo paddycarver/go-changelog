@@ -1,6 +1,6 @@
 module paddy.dev/go-changelog
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/go-git/go-billy/v5 v5.6.2
